@@ -1,0 +1,56 @@
+CEL: wizualizacja Załamanie promienia przez soczewkę:
+
+1. Geometria soczewki
+	- Określenie typu soczewki
+		* np. dwuwypukła, dwuwklęsła
+	- Zdefiniowanie powierzchni sferycznych
+		* powierzchnie jako fragmenty okręgów (równaine okręgu)
+		* określenie promienia krzywizny i środka okręgów
+	- ograniczenie przysłony (aperture)
+		* zdefiniowanie max. odchylenia od osi optycznej
+2. Reprezentacja promieni
+	- Parametryczne równanie promieni r(t)=o + td
+		* o - origin, punkt startowy
+		* d - direction, kierunek
+		* t - czas
+	- Rysowanie promieni początkowych
+	
+3. Punkt przecięcia promienia z powierzchnią
+	- Wstawienie promienia do równania sfery
+		* wstawienie r(t) do |r(t) - C|^2 = R^2, gdzie C - centrum chyba okręgu idk
+	- Rozwiązanie r-nia kwadratowego dla t:
+	 * Czy istnieje przecięcie? (Delta >= 0)
+	 * wybór punktu przecięcia - najmniejsze, dodatnie t
+	- Sprawdzenie czy punkt mieści się w przysłonie
+	
+4. Normalna w punkcie przecięcia
+	- Obliczenie wektora normalnego:
+		* n = (P - C)/R , P - punkt na sferze, C- środek sfery, R to chyba radius sfery
+	- Sprawdzenie kierunku
+		* powinna być skierowana na zewnątrz
+		* jeśli trzeba - obracamy wektor
+		
+5. Załamanie promienia - prawo Snella
+	- Prawo Snella, wektorowy:
+		* t = eta*i + (eta*cos theta - sqrt(1 - eta^2*sin^2 theta) * n)
+			** i - kierunek promienia nadchodzącego
+			** n - wektor normalny powierzchni soczewki
+			** eta - n1/n2
+	- Sprawdzenie całkowitego wewnętrznego odbicia:
+		* ujemny pod pierwiastkiem -> całkowite wewnętrzne odbicie
+
+6. Druga powierzchnia soczewki
+	- powtórka kroków 3-5 dla wyjścia szkło-próżnia
+	
+7. Rysowanie w matplotlib
+	- Rysowanie powierzchni soczewki
+		* Wyliczenie punktów sfery
+	- Rysowanie promieni - np.:
+		* przed soczewką pomarańczowy
+		* wewnątrz zielony
+		* po soczewce niebieski
+	- dodatki
+		* oś optyczna
+
+8. Testy i eksperymenty
+	- zmiana promieni krzywizn, grubośc soczewki, aperturę
