@@ -1,14 +1,17 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-x_c, z_c=0,0
-R=5
-w=2
-size=16
+x_c1, z_c = 0,0   # koordynaty centrum sferY 1 (lewej)
+x_c2 = 0    # koordynaty centrum sfery 2 (prawej), są na tej samej wysokości z_c
+R = 5
+wysokosc = 10       # wysokosc soczewki
 
-z=np.linspace(-w/2, w/2, 500)
-x_upper=x_c+np.sqrt(R**2 - z**2)-(R-w/2)
-x_lower=x_c-(np.sqrt(R**2 - z**2)+(R-w/2))
+size = 16           # szerokość wykresu
+
+
+z = np.linspace(-wysokosc/2, wysokosc/2, 500)
+x_upper = x_c1 + np.sqrt(R**2 - z**2)-(R-wysokosc/2)    # Prawa część soczewki - pochodzi od sfery lewej
+x_lower = x_c2 - (np.sqrt(R**2 - z**2)+(R-wysokosc/2))  # Lewa część soczewki
 
 
 plt.figure(figsize=(6,6))
@@ -22,3 +25,4 @@ plt.grid(True)
 plt.xlabel('x')
 plt.ylabel('z')
 plt.show()
+
