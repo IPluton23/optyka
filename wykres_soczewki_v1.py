@@ -1,10 +1,17 @@
 import numpy as np
 import matplotlib.pyplot as plt
+"""
+musimy dodac jeszcze zakresy parametrów, tak żeby soczewki miały sens
 
+dodatkowo wartości pod pierwiastkiem dla nie których parametrów są ujemne.
+np.clip obcina to, ale rysuje od razu prostą y=0 (nie dosłownie, bo to tablica samych 0, która wygląda jak y=0)
+a tej prostej nie chcemy
+
+wypełnienie soczewek jeszcze nie działa. myślę czy nie użyć fill_between() zamiast fill_betweenx()
+"""
 
 ## soczewki dwuwypukłe
 def dwuwypukle(x_1, x_2, R1, R2):
-    z=0
     size=3
 
     prosta = (x_1**2-x_2**2-R1**2+R2**2)/(2*(x_1-x_2))  # prosta w punktach przecięcia dwóch okręgów
@@ -21,8 +28,6 @@ def dwuwypukle(x_1, x_2, R1, R2):
     x2=np.linspace(prosta, x_2+R2, 500)
     z2_upper=np.sqrt(R2**2+2*x2*x_2-x2**2-x_2**2)
     z2_lower=-np.sqrt(R2**2+2*x2*x_2-x2**2-x_2**2)
-
-
 
     plt.figure(figsize=(6,6))
     # plt.fill_betweenx(z+z_c, x_lower, x_upper, color='skyblue')
@@ -45,7 +50,7 @@ def dwuwypukle(x_1, x_2, R1, R2):
 ## soczewki dwuwklęsłe
 
 def dwuwklesle(x_1, x_2, R1, R2, a):
-    z=0
+  
     size=3
     y=a
     ograniczenie_1=(x_1-np.sqrt(R1**2-a**2))    # proste x, w punktach przecięcia y=a i y=-a (aperture) z okręgami
@@ -87,7 +92,7 @@ def plasko_wypukle(x_1, R1, a):
     """
 
     size=3
-    z=0
+ 
     prosta=a
     x1=np.linspace(x_1-R1, prosta, 500)
     z1_upper=np.sqrt(np.clip(R1**2+2*x1*x_1-x1**2-x_1**2, 0, None))
@@ -112,9 +117,19 @@ def plasko_wypukle(x_1, R1, a):
 # plasko_wypukle(0.64,1,0.2)
 
 def plasko_wklesle(x_2, R2, a):
+    """
+    Docstring for plasko_wklesle
+    
+    :param x_2: Description
+    :param R2: Description
+    :param a:       a <= |x_2|
+
+    x = x_2 + R_2 + a/2
+
+    """
     size=3
     y=a
-    z=0
+
     ograniczenie_2=(x_2+np.sqrt(R2**2-a**2))    # proste x, w punktach przecięcia y=a i y=-a (aperture) z okręgami
     
     x2=np.linspace(ograniczenie_2, x_2+R2+(a/2), 500)
