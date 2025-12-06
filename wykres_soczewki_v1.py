@@ -77,8 +77,67 @@ def dwuwklesle(x_1, x_2, R1, R2, a):
 
 # dwuwklesle(0.7,-1.2,0.8,-0.7,0.6)
 
-def plasko_wypukle():
-    return 0
+def plasko_wypukle(x_1, R1, a):
+    """
+    Docstring for plasko_wypukle
+    
+    :param x_1: Description
+    :param R1: Description
+    :param a: ograniczenie soczewki     a<x_1
+    """
 
-def plasko_wklesle():
-    return 0
+    size=3
+    z=0
+    prosta=a
+    x1=np.linspace(x_1-R1, prosta, 500)
+    z1_upper=np.sqrt(np.clip(R1**2+2*x1*x_1-x1**2-x_1**2, 0, None))
+    z1_lower=-z1_upper
+
+    plt.figure(figsize=(6,6))
+    # plt.fill_betweenx(z+z_c, x_lower, x_upper, color='skyblue')
+    # rysowanie pionowej prostej x=a w zakresie soczewki:
+    z_max = np.max(z1_upper)    #zakresy prostej ograniczającej soczewkę - płaska cześć soczewki
+    z_min = np.min(z1_lower)
+    plt.plot([a, a], [z_min, z_max], 'b')
+    plt.plot(x1, z1_upper, 'b')
+    plt.plot(x1, z1_lower, 'b')
+    plt.xlim(-size, size)
+    plt.ylim(-size, size)
+    plt.gca().set_aspect('equal')
+    plt.grid(True)
+    plt.xlabel('x')
+    plt.ylabel('z')
+    plt.show()
+
+# plasko_wypukle(0.64,1,0.2)
+
+def plasko_wklesle(x_2, R2, a):
+    size=3
+    y=a
+    z=0
+    ograniczenie_2=(x_2+np.sqrt(R2**2-a**2))    # proste x, w punktach przecięcia y=a i y=-a (aperture) z okręgami
+    
+    x2=np.linspace(ograniczenie_2, x_2+R2+(a/2), 500)
+    # z2_upper=np.sqrt(R2**2+2*x2*x_2-x2**2-x_2**2)
+    z2_upper = np.sqrt(np.clip(R2**2 + 2*x2*x_2 - x2**2 - x_2**2, 0, None))
+    z2_lower=-z2_upper
+    
+    plt.figure(figsize=(6,6))
+    # plt.fill_betweenx(z+z_c, x_lower, x_upper, color='skyblue')
+    # rysowanie pionowej prostej x=a w zakresie soczewki:
+    z_max = np.max(z2_upper)    #zakresy prostej ograniczającej soczewkę - płaska cześć soczewki
+    z_min = np.min(z2_lower)
+    plt.plot([x_2+R2+(a/2), x_2+R2+(a/2)], [z_min, z_max], 'b')
+    plt.plot(x2, z2_upper, 'b')
+    plt.plot(x2, z2_lower, 'b')
+    plt.plot(x2, np.full_like(x2, y), 'b')
+    plt.plot(x2, np.full_like(x2, -y), 'b')
+    plt.xlim(-size, size)
+    plt.ylim(-size, size)
+    plt.gca().set_aspect('equal')
+    plt.grid(True)
+    plt.xlabel('x')
+    plt.ylabel('z')
+    plt.show()
+
+# plasko_wklesle(-1.4,1.1,0.85)
