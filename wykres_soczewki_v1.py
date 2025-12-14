@@ -30,7 +30,7 @@ def dwuwypukle(x_1, x_2, R1, R2):
     z2_upper = np.sqrt(R2 ** 2 - (x2 - x_2)**2) # górna półkula
     z2_lower = -z2_upper                        # dolna półkula
 
-    plt.figure(figsize=(6, 6))
+    # plt.figure(figsize=(6, 6))
     #plt.fill_betweenx(z+z_c, x_lower, x_upper, color='skyblue')
     plt.plot(x1, z1_upper, 'b')
     plt.plot(x1, z1_lower, 'b')
@@ -39,11 +39,7 @@ def dwuwypukle(x_1, x_2, R1, R2):
 
     plt.xlim(-size, size)
     plt.ylim(-size, size)
-    #plt.gca().set_aspect('equal')
-    plt.grid(True)                  # NA POTEM czy zostawić grid czy wyrzucić
-    plt.xlabel('x')
-    plt.ylabel('z')
-    plt.show()
+
 #dwuwypukle(1,-1.2,1.16,2)
 
 
@@ -57,14 +53,14 @@ def dwuwklesle(x_1, x_2, R1, R2, a): # a - aperture
 
 # okrąg prawy
     x1 = np.linspace(ograniczenie_2, ograniczenie_1, 500)
-    z1_upper = np.sqrt(R1 ** 2 - (x1 - x_1)**2)
+    z1_upper = np.sqrt(np.clip(R1 ** 2 - (x1 - x_1)**2))
     z1_lower = -z1_upper
 #okrąg lewy
     x2 = np.linspace(ograniczenie_2, ograniczenie_1, 500)
     z2_upper = np.sqrt(np.clip(R2 ** 2 - (x2 - x_2)**2))
     z2_lower = -z2_upper
 
-    plt.figure(figsize=(6, 6))
+    # plt.figure(figsize=(6, 6))
     # plt.fill_betweenx(z1_upper, x1, x1, where=z1_upper>=z1_lower, color='lightblue', alpha=0.5) ## jeszcze nie działa
     plt.plot(x1, z1_upper, 'b')
     plt.plot(x1, z1_lower, 'b')
@@ -74,12 +70,8 @@ def dwuwklesle(x_1, x_2, R1, R2, a): # a - aperture
     plt.plot(x2, np.full_like(x2, -a), 'b')
     plt.xlim(-size, size)
     plt.ylim(-size, size)
-    #plt.gca().set_aspect('equal')
-    plt.grid(True)
-    plt.xlabel('x')
-    plt.ylabel('z')
-    plt.show()
-#dwuwklesle(0.7,-1.2,0.8,-0.7,0.6)
+
+# dwuwklesle(0.7,-1.2,0.8, 0.7,0.6)
 
 def plasko_wypukle(x_1, R1, ograniczenie):
     """
@@ -87,13 +79,13 @@ def plasko_wypukle(x_1, R1, ograniczenie):
 
     :param x_1: Description
     :param R1: Description
-    :param ograniczenie: ograniczenie soczewki   prosta < x_1
+    :param ograniczenie: ograniczenie soczewki   prosta < x_1   potem w innym pliku oznaczałem jako x_plane
     """
     x1 = np.linspace(x_1 - R1, ograniczenie, 500)
     z1_upper = np.sqrt(np.clip(R1 ** 2 - (x1 - x_1)**2, 0, None))
     z1_lower = -z1_upper
 
-    plt.figure(figsize=(6, 6))
+    # plt.figure(figsize=(6, 6))
     # plt.fill_betweenx(z+z_c, x_lower, x_upper, color='skyblue')
 # rysowanie pionowej prostej x=prosta w zakresie soczewki:
     z_max = np.max(z1_upper)  # zakresy prostej ograniczającej soczewkę - płaska cześć soczewki
@@ -104,12 +96,8 @@ def plasko_wypukle(x_1, R1, ograniczenie):
     plt.plot(x1, z1_lower, 'b')
     plt.xlim(-size, size)
     plt.ylim(-size, size)
-    #plt.gca().set_aspect('equal')
-    plt.grid(True)
-    plt.xlabel('x')
-    plt.ylabel('z')
-    plt.show()
-#plasko_wypukle(0.64,1,0.2)
+
+#plasko_wypukle(0.64,1.0,0.2)
 
 def plasko_wklesle(x_2, R2, a):
     """
@@ -117,9 +105,9 @@ def plasko_wklesle(x_2, R2, a):
 
     :param x_2: Description
     :param R2: Description
-    :param a:       a <= |x_2|
+    :param a:     a <= |x_2|
 
-    x = x_2 + R_2 + a/2
+    x = x_2 + R2 + a/2
 
     """
     ograniczenie = (
@@ -130,9 +118,9 @@ def plasko_wklesle(x_2, R2, a):
     z2_upper = np.sqrt(np.clip(R2 ** 2 + 2 * x2 * x_2 - x2 ** 2 - x_2 ** 2, 0, None))
     z2_lower = -z2_upper
 
-    plt.figure(figsize=(6, 6))
+    # plt.figure(figsize=(6, 6))
     # plt.fill_betweenx(z+z_c, x_lower, x_upper, color='skyblue')
-# rysowanie pionowej prostej x=ograniczenie w zakresie soczewki:
+    # rysowanie pionowej prostej x=ograniczenie w zakresie soczewki:
     z_max = np.max(z2_upper)  # zakresy prostej ograniczającej soczewkę - płaska cześć soczewki
     z_min = np.min(z2_lower)
     plt.plot([x_2 + R2 + (a / 2), x_2 + R2 + (a / 2)], [z_min, z_max], 'b')
@@ -143,9 +131,5 @@ def plasko_wklesle(x_2, R2, a):
     plt.plot(x2, np.full_like(x2, -a), 'b')
     plt.xlim(-size, size)
     plt.ylim(-size, size)
-    plt.gca().set_aspect('equal')
-    plt.grid(True)
-    plt.xlabel('x')
-    plt.ylabel('z')
-    plt.show()
-#plasko_wklesle(-1.4,1.1,0.85)
+
+# plasko_wklesle(-1.4,1.1,0.85)
