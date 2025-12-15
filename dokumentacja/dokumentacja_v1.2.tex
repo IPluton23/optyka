@@ -1,0 +1,324 @@
+\documentclass[polish,12pt,a4paper]{article}
+
+\usepackage{polski,amsmath,amsfonts,lipsum,graphicx,float,caption,siunitx,geometry,booktabs,biblatex,pdfpages,array,changepage,ulem,setspace,titlesec,enumitem,adjustbox}
+\usepackage[table]{xcolor}
+\usepackage{amssymb}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[polish]{babel}
+\selectlanguage{polish}
+
+\usepackage{caption}
+\captionsetup{font=footnotesize}
+
+\begin{document}
+
+\begin{titlepage}
+    \centering
+    \includegraphics[width=0.44\textwidth]{logo_pg.png} \\[1.5cm]
+    {\LARGE \bfseries Optyka soczewek \\[0.5cm]} 
+    {\large Grupa projektowa: 1B \\[1cm]} 
+    {\large Wykonawcy: \\[0.3cm]}
+    \textit{Jakub Stosik} s204300 \\ 
+    \textit{Karol Pluto Prądzynski} s203561 \\[1.5cm]
+    {\large Wersja dokumentu: \textit{1.3} \\[0.2cm]}
+    \vspace{0.4cm}
+    {\large\textit{ 15 XII 2025 r.} }
+    
+    \vfill
+\end{titlepage}
+
+\section{Wstęp}
+Optyka jest działem fizyki zajmującą się światłem - jego prawami, rozchodzeniem się i oddziaływaniem z materią. Ważnym zagadnieniem tego działu jest optyka geometryczna przedstawiająca opis załamywania się promieni światła w różnych ośrodkach. W tym projekcie zajmujemy się załamaniem promieni światła na soczekwach, które z fizycznego punktu widzenia są przezroczytsymi obiektami o dwóch współosiowych powierzchniach załamujących światło.
+
+\section{Cel projektu}
+    Celem projektu jest zaprojektowanie modelu fizycznego promienia świetlnego przechodzącego przez soczewkę o zadanych parametrach.
+    
+\section{Opis modelowanego zjawiska}
+    Soczewki mogą wytwarzać obraz źródła światła zmieniając kierunek promieni świetlnych wychodzących z jego powierzchni. Obraz powstaje gdy po zmianie kierunku przecinają się promienie (tworząc obraz rzeczywisty), lub ich przedłużenia (tworząc obraz pozorny).
+
+%    W matematycznym opisie będziemy używali następujących wielkości:
+   % \begin{itemize}
+      %  \item $p$ - odległość przedmiotu od soczewki,
+       % \item $o$ - odległość obrazu od soczewki,
+      %  \item $f$ - ogniskowa,
+       % \item $n_{2,1} = \frac{n_2}{n_1}$ - względny współczynnik załamania światła ośrodka drugiego względem pierwszego,
+       % \item $r_1, r_2$ - promienie krzywizn dwóch sferycznych powierzchni soczewki.
+   % \end{itemize}
+
+   % Najbardziej fundamentalne jest równanie soczewki:
+   % \begin{equation}
+     %   \frac{1}{p} + \frac{1}{o} = \frac{1}{f} = (n_{2,1}-1)\left( \frac{1}{r_1}-\frac{1}{r_2} \right)
+   % \end{equation}
+
+   % Powiększenie liniowe $m$ cienkiej soczewki jest równe:
+   % \begin{equation}
+      %  \left| m \right| = \frac{o}{p}
+   % \end{equation}
+
+    
+    % Stonsowe zmiany
+    
+\subsection{Modelowanie soczewek}
+W naszym programie zaimplementowane zostaną 4 typy soczewek: dwuwypukłe, dwuwklęsłe, płasko-wypukłe, płasko-wklęsłe. Dla każdego z tych typów równania opisujce soczewki na płaszczyźnie będą się różnić.\\
+\subsubsection*{Soczewki dwuwypukłe}
+Dla soczewek dwuwypukłych, które matematycznie opisane są za pomocą dwóch okręgów na płaszczyźnie $XZ$, równania wyglądają następująco:
+\begin{equation}
+(x-x_1)^2+z^2=R_1^2
+\end{equation}gdzie $\quad x_1\,,\quad R_1\quad$ są to parametry zadane przez użytkownika - środek oraz promień pierwszego okręgu.
+\begin{equation}
+(x-x_2)^2+z^2=R_2^2
+\end{equation}gdzie $\quad x_2\,,\quad R_2\quad$ są to parametry zadane przez użytkownika - środek oraz promień drugiego okręgu.\\Warto zauważyć, że środki obu okręgów leżą na tej samej osi (prostej $z=z_1=z_2=0$)
+\vspace{0.6cm}
+
+
+Rozwiązując te równania ze względu na $x$ otrzymujemy prostą, która wyznaczy nam środek soczewki dwuwypukłej:
+\begin{equation}
+x=\frac{x_1^2-x_2^2-R_1^2+R_2^2}{2(x_1-x_2)}
+\end{equation}
+\vspace{0.6cm}
+
+Aby modelowanie soczewek za pomocą powyższych równań miało sens, musi zostać spełniony następujący warunek:
+\begin{equation}
+\left|R_1-R_2\right|<\left|x_1-x_2\right|<R_1+R_2
+\end{equation}gdzie $\quad R_1\,,\,R_2\,>0\qquad$oraz$\quad x_1>x_2$
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.6\textwidth]{dwuwypukla_desmos.png}
+\caption{Matematyczna wizualizacja cienkiej soczewki dwuwypukłej}
+\end{figure}
+
+\subsubsection*{Soczewki dwuwklęsłe}
+Dla soczewek dwuwklęsłych, które matematycznie są opisane za pomocą dwóch okręgów na płaszczyźnie $XZ$, dwóch prostych ograniczających soczewkę z góry i z dołu (apertura), równania wyglądają następująco:
+\begin{equation}
+(x-x_1)^2+z^2=R_1^2
+\end{equation}gdzie $\quad x_1\,,\quad R_1\quad$ są to parametry zadane przez użytkownika - środek oraz promień pierwszego okręgu.
+\begin{equation}
+(x-x_2)^2+z^2=R_2^2
+\end{equation}gdzie $\quad x_2\,,\quad R_2\quad$ są to parametry zadane przez użytkownika - środek oraz promień drugiego okręgu.\\Warto zauważyć, że środki obu okręgów leżą na tej samej osi (prostej $z=z_1=z_2=0$)
+\vspace{0.6cm}
+
+
+Rozwiązując te równania ze względu na $x$ - podobnie jak powyżej - otrzymujemy prostą, która wyznaczy nam środek soczewki dwuwklęsłej:
+\begin{equation}
+x=\frac{x_1^2-x_2^2-R_1^2+R_2^2}{2(x_1-x_2)}
+\end{equation}
+\vspace{0.6cm}
+
+Proste ograniczające soczewkę z góry:
+\begin{equation}
+y=\pm a
+\end{equation}gdzie $\quad a<\min(|R_1|, |R_2|)$
+\vspace{0.6cm}
+
+Aby modelowanie soczewek za pomocą powyższych równań miało sens, musi zostać spełniony następujący warunek:
+\begin{equation}
+\left|x_1-x_2\right|>R_1+R_2
+\end{equation}gdzie $\quad R_1\,,\,R_2\,>0\qquad$oraz$\quad x_1>x_2$
+\vspace{0.6cm}
+
+Dodatkowo w programie podczas rysowania soczewek dwuwklęsłych, będziemy je ograniczala z lewej jak i z prawej strony odpowiednimi równaniami:
+\begin{align}
+x=x_2+\sqrt{R_2^2-a^2}\\
+x=x_1-\sqrt{R_1^2-a^2}
+\end{align}
+\vspace{0.6cm}
+
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.6\textwidth]{dwuwklesla_desmos.png}
+\caption{Matematyczna wizualizacja cienkiej soczewki dwuwklęsłej}
+\end{figure}
+
+\subsubsection*{Soczewki płasko-wypukłe}
+Dla soczewek płasko-wypukłych, które matematycznie są opisane za pomocą jednego okręgu na płaszczyźnie $XZ$ oraz jednej prostej ograniczającej soczewkę (płaska jej część), równania wyglądają następująco:
+\begin{equation}
+(x-x_1)^2+z^2=R_1^2
+\end{equation}gdzie $\quad x_1\,,\quad R_1>0\quad$ są to parametry zadane przez użytkownika - środek oraz promień okręgu.
+\begin{equation}
+x=a
+\end{equation}gdzie $\quad x_1-R_1<a<x_1+R_1$
+\vspace{0.6cm}
+
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.6\textwidth]{plasko_wypukla_desmos.png}
+\caption{Matematyczna wizualizacja cienkiej soczewki płasko-wypukłej}
+\end{figure}
+
+\subsubsection*{Soczewki płasko-wklęsłe}
+Dla soczewek płasko-wklęsłych, które matematycznie są opisane za pomocą jednego okręgu na płaszczyźnie $XZ$, jedenj prostej ograniczajęcej soczewkę (płaska jej część) oraz dwóch prostych ograniczających soczewkę z góry i z dołu (apertura), równania wyglądają następująco:
+\begin{equation}
+(x-x_2)^2+z^2=R_2^2
+\end{equation}gdzie $\quad x_2\,,\quad R_2\quad$ są to parametry zadane przez użytkownika - środek oraz promień okręgu.
+\vspace{0.6cm}
+
+Proste ograniczające soczewkę z góry:
+\begin{equation}
+y=\pm a
+\end{equation}gdzie $\quad 0<a<R_2$
+\vspace{0.6cm}
+
+Prosta ograniczająca soczewkę 
+\begin{equation}
+x=x_2+R_2+\frac{a}{2}
+\end{equation}
+\vspace{0.6cm}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.6\textwidth]{plasko_wklesla_desmos.png}
+\caption{Matematyczna wizualizacja cienkiej soczewki płasko-wklęsłej}
+\end{figure}
+
+\subsection{Rysowanie promienia świetlnego - ray tracing}
+
+Promień będziemy rysować w trzech etapach. Pierwszy etap to przebieg promienia od punktu startowego do punktu, w którym pada na powierzchnię soczewki z lewej strony, bo zakładamy w naszym programie, że start przebiegu promienia będzie po lewej stronie modelowanej soczewki. Zakładamy również pewne uproszczenie, tj. promień na początku ma kierunek zgodny z osią $OX$, a więc można nadać mu kierunek $\vec{k}=[1,\,0]$. Przebieg zaczyna się od punktu startowego $(x_0, z_0)$, pada na soczewkę w punkcie $(x_p, z_p)$. Możemy dokładnie wyznaczyć punkt przecięcia łuku z tą prostą (promieniem świetlnym). Dalej, aby wyznaczyć kąt załamania, musimy skorzystać z wektora normalnego do łuku w naszym punkcie padania promienia na soczewkę. Wektor normalny jest liczony za pomocą następującej zależności:
+\begin{equation}\vec{n}=\frac{\vec{r}-\vec{r_{środek}}}{\left|\vec{r}-\vec{r_{środek}}\right|}=\frac{(x_p-x_c,\,z_p)}{R}\end{equation}gdzie $R\quad-\quad$ promień okręgu, na który pada promień w danej chwili\\$x_c\quad-\quad$ współżędna x-owa środka tego okręgu.
+
+Dalej używamy odpowiednich funkcji liczących nowy kierunek wektora $\vec{k}$, kiedy promień przechodzi przez soczewkę oraz kiedy z niej wychodzi. Natomiast kąty załamania na kolejnym ośrodku liczymy z prawa Snella:
+    \begin{equation}
+        n_1 \sin(\theta_1) = n_2 \sin(\theta_2)
+    \end{equation}
+    
+    
+My natomiast w przebiegu promienia będziemy korzystać z równania parametrycznego z parametrem $t$ (\textit{to nie czas !}), gdzie $t \in \mathbb{R}$:\begin{equation}
+\vec{r}(t)=\vec{r_0}+t\vec{k}
+\end{equation}
+\[
+\vec{r}(t) =
+\begin{pmatrix}
+x(t) \\
+z(t)
+\end{pmatrix}
+=
+\begin{pmatrix}
+x_0 \\
+z_0
+\end{pmatrix}
++
+t
+\begin{pmatrix}
+k_x \\
+k_z
+\end{pmatrix}
+\]
+\vspace{0.04cm}
+
+
+\[
+\begin{cases}
+x(t) = x_0 + t\,k_x \\
+z(t) = z_0 + t\,k_z
+\end{cases}
+\]
+
+
+Podstawiając te składowe do równania okręgu otrzymujemy:
+\begin{gather}
+(x-x_c)^2+z^2=R^2\\
+(x_0+tk_x-x_c)^2+(z_0+tk_z)^2=R^2\\
+\textit{inaczej:}\quad at^2+bt+c=0\\
+\textit{gdzie:}\\
+a=k_x^2+k_z^2\\
+b=2((x_0-x_c)k_x+z_0k_z)\\
+c=(x_0-x_c)^2+z_0^2-R^2
+\end{gather}
+
+
+Z tego wynika, że mamy dwa możliwe przecięcia z okręgiem, ale tylko jedno będzie w jego widzocznej części (na soczewce) - wybieramy najmniejsze dodatnie.
+\vspace{0.6cm}
+
+
+W przypadku promienia padającego na płaską powierzchnię, a nie na fragment okręgu, parametr $t$ można wyrazić dużo prościej:
+\begin{equation}t=\frac{(x_{\textit{płaszczyzny}}-x_0)}{k_x}\end{equation}gdzie $x_{\textit{płaszczyzny}}\quad$ to równanie prostej, która zamyka płaską soczewkę.
+
+Funkcje liczące nam promień zwracają nowy punkt przecięcia oraz nowy kierunek.
+
+
+Podsumowując: tak możemy wymodelować \textit{ray tracing} dla soczewek \textbf{grubych}.
+
+\section{Opis wykorzystywanych narzędzi}
+    \begin{itemize}
+        \item Wersja Pythona: 3.14,
+        \item Wykorzystywane biblioteki: numpy, sympy, matplotlib, scipy,
+        \item IDE: Visual Studio Code
+    \end{itemize}
+    
+\section{Ogólny opis i możliwe alternatywy}
+Przed wyświetleniem wizualizacji użytkownik będzie miał możliwość wyboru jednej z czterech typów soczewek za pomocą przycisków. Soczewki dwuwypukłe, soczewki dwuwklęsłe, soczewki płasko-wypukłe oraz płasko-wklęsłe. Wtedy też program pozwoli użytkownikowi na dobranie parametru promienia świetlnego - punkt jego 'startu' oraz promienie krzywizn/krzywizny za pomocą suwaku. Następnie dla wybranej soczewki program pokaże przebieg promienia światła od początku do załamania promienia z powierzchnią soczewki, przez przebieg promienia przez soczewkę, do ponownego załamania promienia na granicy soczewka-powietrze oraz dalej w nowym oknie.
+
+Użytkownik powinien mieć możliwość wprowadzenia danych bezpośrednio w interfejsie za pomocą suwaków oraz wcześniej wspomnianych przycisków.
+
+Jak ma wyglądać interfejs? Na początku wybranie soczewki i jej materiału, zadanie promienia krzywizny/krzywizn. Kolejne okno: wykres soczewki wraz z przebiegiem promienia w \textit{matplotlib}
+
+
+Alternatywą jest przygotowanie soczewek o odgórnie zadanych parametrach, przez którą załamywać się będzie promień. Inną alternatywą jest uruchomienie interfejsu w pojedynczym oknie, pozwolenie użytkownikowi na dobranie typów i materiałów soczewek w czasie rzeczywistym, a więc dodatnie funkcji aktualizującej obliczenia w czasie rzeczywistym. Jeszcze inną alternatywą jest dodatkowo dodanie soczewek grubych.
+    
+\section{Specyficzne wymagania}
+    \subsection{Wymagania funkcjonalne}
+        \begin{itemize}
+            \item Interfejs graficzny z obrazowym przedstawieniem soczewek,
+            \item Wprowadzanie danych przez użytkownika,
+            \item Wizualizacja toru promienia,
+            \item Obliczanie załamań promieni świetlnych na soczewce,
+            \item Obsługa błędów.
+        \end{itemize}
+    \subsection{Wymagania niefunkcjonalne}
+    \begin{itemize}
+        \item Intuicyjny interfejs graficzny,
+        \item Modyfikowalność.
+    \end{itemize}
+    
+\section{Harmonogram prac z zadaniami do wykonania}
+
+
+\begin{table}[H]
+\begin{adjustwidth}{-0.4cm}{0.4cm}
+\centering
+\renewcommand{\arraystretch}{1.5} % zwiększa wysokość wierszy
+\begin{tabular}{@{} l l @{}}
+\toprule
+\rowcolor{gray!20} \textbf{Tydzień} & \textbf{Zakres prac} \\
+\midrule
+\textbf{\textit{1.}} 8 XII 2025 - 14 XII 2025 & Funkcje modelujące soczewki w \textit{matplotlib} \\
+\textbf{\textit{2.}} 15 XII 2025 - 4 I 2026 & Dodanie funkcji załamania promienia na soczewce \\
+\textbf{\textit{3.}} 5 I 2026 - 11 I 2026 & Interfejs graficzny, wprowadzanie danych i obsługa błędów \\
+\textbf{\textit{4.}} 12 I 2026 - 18 I 2026 & Naprawa błędów i finalizacja \\
+\bottomrule
+\end{tabular}
+\end{adjustwidth}
+\caption{Harmonogram prac}
+\label{tab:harmonogram}
+\end{table}
+
+
+\begin{thebibliography}{9}
+\bibitem{bobrowski2016}\textit{Fizyka. Krótki kurs}, Czesław Bobrowski, Wydawnictwo Naukowe PWN 2016.
+\bibitem{halliday2014} \textit{Podstawy fizyki cz. 4}, D. Halliday, R. Resnick, J. Walker, Wydawnictwo Naukowe PWN 2014.
+\end{thebibliography}
+\newpage
+
+\begin{footnotesize}
+\section{Lista zmian w dokumentacji}
+\subsection*{Wersja 1.2}
+\begin{enumerate}
+\item Zmiana marginesów dokumentu
+\item Dodanie matematycznego opisu wymodelowanych soczewek w nowej sekcji \textit{Modelowanie soczewek}
+\item Modyfikacja tabeli z harmonogramem prac
+\item Nowa bibliografia
+\item Strona tytułowa
+\end{enumerate}
+\subsection*{Wersja 1.3}
+\begin{enumerate}
+\item Dodanie opisu przebiegu promienia świetlnego
+\item Usunięcie zbędnego opisu matematycznego tworzenia obrazu przez daną soczewkę, ponieważ nie to jest modelowane
+\end{enumerate}
+\end{footnotesize}
+\end{document}
+
+
+
+ś
