@@ -1,108 +1,136 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib.widgets import Slider, RadioButtons
+
 import wykres_soczewki_v1 as lens
 import liczenie_promienia as ray
 
 
-# ### D W U W Y P U K Ł E :
-# x0, z0 = -2.0, 0.5         # punkt startow
-# k = np.array([1.0, 0.0])   # kierunek początkowy
-# x_1, R1 = 1, 1.16
-# x_2, R2 = -1.2, 2
-# n_air, n_lens = 1.0, 1.5   # współczynniki załamania
+def interaktywna_soczewka():
+    """
+    Ta funkcja rysuje soczewkę i promień
+    x0 - położenie początkowe
+    k - wektor kierunkowy (skierowany poziomo w stronę rosnącego x)
+    x_final - punkt końca rysowania promienia
+    n_air, n_lens - wartości współczynnika załamania dla powietrza i soczewki
 
-# # punkt startowy i punkt przecięcia
-# p_start = np.array([x0, z0])
-# # pierwszy odcinek: lewa powierzchnia soczewki
-# p_hit1, k_out1 = ray.ray_on_circ(x0, z0, k, x_1, R1, n_air, n_lens)
+    potem zakresy wykresu
 
-# # drugi odcinek: prawa powierzchnia soczewki
-# p_hit2, k_out2 = ray.ray_on_circ(p_hit1[0], p_hit1[1], k_out1, x_2, R2, n_lens, n_air)
+    potem słownik z soczewkami gdzie
+        'draw' rysuje soczewkę o parametrach z pliku wykres_soczewki.py
+        'trace' liczy pkty przecięcia i nowy kierunek promienia
 
-# # rysowanie
-# plt.figure(figsize=(6,6))
-# lens.dwuwypukle(x_1, x_2, R1, R2)
-# # pierwszy odcinek: od startu do lewej powierzchni
-# ray.draw_ray(p_start, p_hit1)
+    """
+    x0 = -1.6
+    k = np.array([1.0, 0.0])
+    x_final = 6
+    n_air, n_lens = 1.0, 1.5
 
-# # drugi odcinek: od lewej powierzchni do prawej
-# ray.draw_ray(p_hit1, p_hit2)
+    fig, ax = plt.subplots(figsize=(6, 6))
+    plt.subplots_adjust(left=0.3, bottom=0.25)
+    ax.set_xlim(-3, 3)
+    ax.set_ylim(-3, 3)
+    ax.grid(False)
 
-# # trzeci odcinek: od prawej powierzchni do powietrza
-# x_final = 6
-# z_final = p_hit2[1] + k_out2[1]/k_out2[0] * (x_final - p_hit2[0])
-# ray.draw_ray(p_hit2, np.array([x_final, z_final]))
+    # --- definicje soczewek ---
+    soczewki = {
+        "Dwuwklęsła": lambda ax: lens.dwuwklesle(0.7, -1.2, 0.8, 0.7, 0.6, ax),
+        "Dwuwypukła": lambda ax: lens.dwuwypukle(1.0, -1.2, 1.16, 2.0, ax),
+        "Płasko-wypukła": lambda ax: lens.plasko_wypukle(0.64, 1.0, 0.2, ax),
+        "Płasko-wklęsła": lambda ax: lens.plasko_wklesle(-1.4, 1.1, 0.85, ax)
+    }
+
+    # --- funkcje promieni dla soczewek ---
+    """
+        p_start - punkt startowy promienia na płaszczyźnie XZ, gdzie z0 jest sterowany sliderem
+        p1 - pierwszy pkt przecięcia promienia z soczewką liczony z funkcji z pliku liczenie_promieni.py
+        k1 - kierunek promienia po pierwszym przecięciu promienia z soczewką liczone z pliku ^^^
+        p2,k2 analogicznie, ale dla drugiego przecięcia
+        zf - końcowe położenie promienia na osi Z dla x=x_final
+    """
+    def ray_dwuwklesla(z0):
+        p_start = np.array([x0, z0])
+        p1, k1 = ray.ray_on_circ(x0, z0, k, -1.2, 0.7, n_air, n_lens)
+        p2, k2 = ray.ray_on_circ(p1[0], p1[1], k1, 0.7, 0.8, n_lens, n_air)
+        zf = p2[1] + k2[1]/k2[0]*(x_final - p2[0])
+        return p_start, p1, p2, np.array([x_final, zf])
+
+    def ray_dwuwypukla(z0):
+        p_start = np.array([x0, z0])
+        p1, k1 = ray.ray_on_circ(x0, z0, k, 1.0, 1.16, n_air, n_lens)
+        p2, k2 = ray.ray_on_circ(p1[0], p1[1], k1, -1.2, 2.0, n_lens, n_air)
+        zf = p2[1] + k2[1]/k2[0]*(x_final - p2[0])
+        return p_start, p1, p2, np.array([x_final, zf])
+
+    def ray_plasko_wypukla(z0):
+        p_start = np.array([x0, z0])
+        p1, k1 = ray.ray_on_circ(x0, z0, k, 0.64, 1.0, n_air, n_lens)
+        p2, k2 = ray.ray_on_plane(p1[0], p1[1], k1, 0.2, n_lens, n_air)
+        zf = p2[1] + k2[1]/k2[0]*(x_final - p2[0])
+        return p_start, p1, p2, np.array([x_final, zf])
+
+    def ray_plasko_wklesla(z0):
+        p_start = np.array([x0, z0])
+        p1, k1 = ray.ray_on_circ(x0, z0, k, -1.4, 1.1, n_air, n_lens)
+        p2, k2 = ray.ray_on_plane(p1[0], p1[1], k1, -1.4 + 1.1 + 0.85/2, n_air, n_lens)
+        zf = p2[1] + k2[1]/k2[0]*(x_final - p2[0])
+        return p_start, p1, p2, np.array([x_final, zf])
+
+    # --- update wykresu ---
+    def update(val=None):
+        """
+        z0 - aktualna wartość z slidera
+        ax.cla() - czyszczenie osi, aby narysować nowy wykres
+        nazwa - którą soczewkę wybrano z przycisków radio
+
+        :return:
+        """
+        z0 = slider.val
+        ax.cla()
+        ax.set_xlim(-3, 3)
+        ax.set_ylim(-3, 3)
+        ax.grid(False)
+
+        nazwa = radio.value_selected
+        # rysujemy soczewkę
+        soczewki[nazwa](ax)
+
+        # rysujemy promień
+        try:
+            if nazwa == "Dwuwklęsła":
+                p0, p1, p2, pf = ray_dwuwklesla(z0)
+            elif nazwa == "Dwuwypukła":
+                p0, p1, p2, pf = ray_dwuwypukla(z0)
+            elif nazwa == "Płasko-wypukła":
+                p0, p1, p2, pf = ray_plasko_wypukla(z0)
+            elif nazwa == "Płasko-wklęsła":
+                p0, p1, p2, pf = ray_plasko_wklesla(z0)
+
+            ax.plot([p0[0], p1[0]], [p0[1], p1[1]], 'r', linewidth=1.5)
+            ax.plot([p1[0], p2[0]], [p1[1], p2[1]], 'r', linewidth=1.5)
+            ax.plot([p2[0], pf[0]], [p2[1], pf[1]], 'r', linewidth=1.5)
+        except Exception as e:
+            print("Błąd w rysowaniu promienia:", e)
+
+        fig.canvas.draw_idle()
+
+    # --- slider ---
+    # Zmienia położenie promienia na osi Z
+    ax_slider = plt.axes([0.35, 0.1, 0.5, 0.03])
+    slider = Slider(ax_slider, "z0", -1.5, 1.5, valinit=0.0)
+
+    # --- radio buttons ---
+    # do wyboru soczewki
+    ax_radio = plt.axes([0.05, 0.4, 0.2, 0.25])
+    radio = RadioButtons(ax_radio, list(soczewki.keys()))
+
+    radio.on_clicked(lambda label: update())  # ignorujemy argument label
+    slider.on_changed(update)
 
 
+    update()
+    plt.show()
 
 
-# ### P Ł A S K O - W Y P U K Ł E:
-# x0, z0 = -2.0, 0.3
-# k = np.array([1.0, 0.0])
-# x_1, R1 = 0.64, 1.0
-# x_plane = 0.2
-# n_air, n_lens = 1.0, 1.5
-
-# p_start = np.array([x0, z0])
-# p_hit1, k_out1 = ray.ray_on_circ(x0, z0, k, x_1, R1, n_air, n_lens)
-# p_hit2, k_out2 = ray.ray_on_plane(p_hit1[0], p_hit1[1], k_out1, x_plane, n_air, n_lens)
-
-# plt.figure(figsize=(6,6))
-# lens.plasko_wypukle(x_1, R1, x_plane)
-# ray.draw_ray(p_start, p_hit1)
-# ray.draw_ray(p_hit1, p_hit2)
-# x_final = 6
-# z_final = p_hit2[1] + k_out2[1]/k_out2[0] * (x_final - p_hit2[0])
-# ray.draw_ray(p_hit2, np.array([x_final, z_final]))
-
-
-
-# ### P Ł A S K O - W K L Ę S Ł E:
-# x0, z0 = -1.6, 0.3
-# k = np.array([1.0, 0.0])
-# x_2, R2 = -1.4, 1.1
-# a = 2.0
-# x_plane = x_2 + R2 + a/2
-# n_air, n_lens = 1.0, 1.5
-
-# p_start = np.array([x0, z0])
-# p_hit1, k_out1 = ray.ray_on_circ(x0, z0, k, x_2, R2, n_air, n_lens)
-# p_hit2, k_out2 = ray.ray_on_plane(p_hit1[0], p_hit1[1], k_out1, x_plane, n_air, n_lens)
-
-# plt.figure(figsize=(6,6))
-# lens.plasko_wklesle(x_2, R2, x_plane)
-# ray.draw_ray(p_start, p_hit1)
-# ray.draw_ray(p_hit1, p_hit2)
-# x_final = 6
-# z_final = p_hit2[1] + k_out2[1]/k_out2[0] * (x_final - p_hit2[0])
-# ray.draw_ray(p_hit2, np.array([x_final, z_final]))
-
-
-
-### D W U W K L Ę S Ł E:
-x0, z0 = -1.6, -0.23
-k = np.array([1.0, 0.0])
-x_1, R1 = 0.7, 0.8
-x_2, R2 = -1.2, 0.7
-a = 0.6
-n_air, n_lens = 1.0, 1.5
-
-p_start = np.array([x0, z0])
-p_hit1, k_out1 = ray.ray_on_circ(x0, z0, k, x_2, R2, n_air, n_lens)
-p_hit2, k_out2 = ray.ray_on_circ(p_hit1[0], p_hit1[1], k_out1, x_1, R1, n_lens, n_air)
-
-plt.figure(figsize=(6,6))
-lens.dwuwklesle(x_1, x_2, R1, R2, a)
-ray.draw_ray(p_start, p_hit1)
-ray.draw_ray(p_hit1, p_hit2)
-x_final = 6
-z_final = p_hit2[1] + k_out2[1]/k_out2[0] * (x_final - p_hit2[0])
-ray.draw_ray(p_hit2, np.array([x_final, z_final]))
-
-
-
-
-plt.xlim(-3,3)
-plt.ylim(-3,3)
-plt.grid(False)
-plt.show()
+# uruchomienie wszystkiego
+interaktywna_soczewka()
