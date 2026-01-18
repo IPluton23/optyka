@@ -34,7 +34,7 @@ def interaktywna_soczewka():
 
     # --- definicje soczewek ---
     soczewki = {
-        "Dwuwklęsła": lambda ax: lens.dwuwklesle(0.7, -1.2, 0.8, 0.7, 0.6, ax),
+        "Dwuwklęsła": lambda ax: lens.dwuwklesle(0.7, -1.2, 0.8, 0.7, 0.6, ax), #0.7, -1.2, 0.8, 0.7, 0.6, ax #1.7, -1.2, 1.4, 0.6, 0.8, ax
         "Dwuwypukła": lambda ax: lens.dwuwypukle(1.0, -1.2, 1.16, 2.0, ax),
         "Płasko-wypukła": lambda ax: lens.plasko_wypukle(0.64, 1.0, 0.2, ax),
         "Płasko-wklęsła": lambda ax: lens.plasko_wklesle(-1.4, 1.1, 0.85, ax)
@@ -87,8 +87,8 @@ def interaktywna_soczewka():
         """
         z0 = slider.val
         ax.cla()
-        ax.set_xlim(-3, 3)
-        ax.set_ylim(-3, 3)
+        ax.set_xlim(-2, 2)
+        ax.set_ylim(-2, 2)
         ax.grid(False)
 
         nazwa = radio.value_selected
@@ -117,20 +117,18 @@ def interaktywna_soczewka():
     # --- slider ---
     # Zmienia położenie promienia na osi Z
     ax_slider = plt.axes([0.35, 0.1, 0.5, 0.03])
-    slider = Slider(ax_slider, "z0", -1.5, 1.5, valinit=0.0)
+    slider = Slider(ax_slider, "z0", -0.32, 0.32, valinit=0.0)
 
     # --- radio buttons ---
     # do wyboru soczewki
     ax_radio = plt.axes([0.05, 0.4, 0.2, 0.25])
     radio = RadioButtons(ax_radio, list(soczewki.keys()))
 
-    radio.on_clicked(lambda label: update())  # ignorujemy argument label
+    radio.on_clicked(lambda label: update())
     slider.on_changed(update)
-
 
     update()
     plt.show()
-
 
 # uruchomienie wszystkiego
 interaktywna_soczewka()

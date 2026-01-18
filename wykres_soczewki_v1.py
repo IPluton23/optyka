@@ -2,20 +2,27 @@ import numpy as np
 import matplotlib.pyplot as plt
 size = 3
 """
-Dodanie aparture tam gdzie brakuje
 
 musimy dodac jeszcze zakresy parametrów, tak żeby soczewki miały sens
 
-dodatkowo wartości pod pierwiastkiem dla nie których parametrów są ujemne.
+dodatkowo wartości pod pierwiastkiem dla niektórych parametrów są ujemne.
 np.clip obcina to, ale rysuje od razu prostą y=0 (nie dosłownie, bo to tablica samych 0, która wygląda jak y=0)
 a tej prostej nie chcemy
 
-wypełnienie soczewek jeszcze nie działa. myślę czy nie użyć fill_between() zamiast fill_betweenx()
 """
 
 
 ## soczewki dwuwypukłe
 def dwuwypukle(x_1, x_2, R1, R2, ax):
+    """
+
+    :param x_1: środek okręgu prawego
+    :param x_2: środek okręgu lewego
+    :param R1: promień okręgu prawego
+    :param R2: promień okręgu drugiego
+    :param ax: parametr do rysowania odpowiedniego wykresu (to samo dla pozostałych funkcji)
+    :return:
+    """
 
     prosta = (x_1 ** 2 - x_2 ** 2 - R1 ** 2 + R2 ** 2) / (2 * (x_1 - x_2))  # prosta w punktach przecięcia dwóch okręgów
     # print('prosta', prosta)
@@ -43,9 +50,18 @@ def dwuwypukle(x_1, x_2, R1, R2, ax):
 
 
 ## soczewki dwuwklęsłe
-def dwuwklesle(x_1, x_2, R1, R2, a, ax): # a - aperture
-    ograniczenie_1 = x_1 - np.sqrt(R1 ** 2 - a ** 2)  # proste pionowa, w punktach przecięcia y=a i y=-a (aperture) z okręgami
-    ograniczenie_2 = x_2 + np.sqrt(R2 ** 2 - a ** 2)  # proste pionowa
+def dwuwklesle(x_1, x_2, R1, R2, a, ax):
+    """
+
+    :param x_1: środek okręgu prawego
+    :param x_2: środek okręgu lewego
+    :param R1: promień okręgu prawego
+    :param R2: promień okręgu lewego
+    :param a: apartura
+    :return:
+    """
+    ograniczenie_1 = x_1 - np.sqrt(R1 ** 2 - a ** 2)  # proste pozioma, w punktach przecięcia y=a i y=-a (aperture) z okręgami
+    ograniczenie_2 = x_2 + np.sqrt(R2 ** 2 - a ** 2)  # proste pozioma
     prosta = (x_1 ** 2 - x_2 ** 2 - R1 ** 2 + R2 ** 2) / (2 * (x_1 - x_2))  # prosta przechodząca przez środek soczewki
 
     # okrąg prawy
@@ -74,8 +90,8 @@ def plasko_wypukle(x_1, R1, ograniczenie, ax):
     """
     Docstring for plasko_wypukle
 
-    :param x_1: Description
-    :param R1: Description
+    :param x_1: środek okręgu
+    :param R1: promień okręgu
     :param ograniczenie: ograniczenie soczewki   prosta < x_1   potem w innym pliku oznaczałem jako x_plane
     """
     x1 = np.linspace(x_1 - R1, ograniczenie, 500)
@@ -99,9 +115,9 @@ def plasko_wklesle(x_2, R2, a, ax):
     """
     Docstring for plasko_wklesle
 
-    :param x_2: Description
-    :param R2: Description
-    :param a:     a <= |x_2|
+    :param x_2: środek okręgu
+    :param R2: promień okręgu
+    :param a:  apartura   a <= |x_2|
     """
     ograniczenie = x_2 + np.sqrt(R2 ** 2 - a ** 2)  # proste pionowe
 

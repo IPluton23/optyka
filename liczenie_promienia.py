@@ -16,7 +16,7 @@ def ray_on_circ(x0, z0, k, x_c, R, n1, n2):
     """
 
     # równanie parametryczne promienia: r(t) = (x0, z0) + t*k ,  równanie okręgu: (x - x_c)**2 + z**2 = R**2 ,  podstawiamy: (x0 + t*k[0] - x_c)**2 + (z0 + t*k[1])**2 = R**2
-    # t to nie czas Szwagier xd, to liczba mowiąca jak daleko wzdłuż promienia jesteś, czyli w punkcie startowym mamy t=0. jak promień leci w prawo to t>0 a jak w lewo to t< 0
+    # t to nie czas, to liczba mowiąca jak daleko wzdłuż promienia jesteś, czyli w punkcie startowym mamy t=0. jak promień leci w prawo to t>0 a jak w lewo to t< 0
     dx = x0 - x_c   #ile punkt startowy jest przesunięty w osi x od środka okręgu
     dz = z0     #   ile jest w osi z (bo środek ma z = 0)
     # z równania kwadratowego z komentarza wyżej mamy współczynniki:
@@ -79,8 +79,8 @@ def ray_on_plane(x0, z0, k, x_plane, n1, n2):
     :param z0: -||-
     :param k: kiernek
     :param x_plane: równanie płaszczyzny - położenie płaszczyzny
-    :param n1: Description
-    :param n2: Description
+    :param n1: współczynnik załamania w ośrodku wejściowym
+    :param n2: współczynnik załamania w ośrodku wyjściowym
     """
 
     # parametr t przecięcia z prostą x=x_plane
