@@ -26,10 +26,10 @@ def interaktywna_soczewka():
     x_final = 6
     n_air, n_lens = 1.0, 1.5
 
-    fig, ax = plt.subplots(figsize=(6, 6))
+    fig, ax = plt.subplots(figsize=(12, 6))
     plt.subplots_adjust(left=0.3, bottom=0.25)
-    ax.set_xlim(-3, 3)
-    ax.set_ylim(-3, 3)
+    ax.set_xlim(-1.2, 1.44)
+    ax.set_ylim(-1.2, 1.2)
     ax.grid(False)
 
     # --- definicje soczewek ---
@@ -87,9 +87,16 @@ def interaktywna_soczewka():
         """
         z0 = slider.val
         ax.cla()
-        ax.set_xlim(-2, 2)
-        ax.set_ylim(-2, 2)
+        ax.set_xticks([])
+        ax.set_yticks([])
+
+        ax.set_xlim(-1.2, 1.44)
+        ax.set_ylim(-1.2, 1.2)
         ax.grid(False)
+
+
+        # oś optyczna
+        ax.axhline(y=0, color='blue', linewidth=1.2, linestyle='-')
 
         nazwa = radio.value_selected
         # rysujemy soczewkę
