@@ -1,13 +1,34 @@
-\documentclass[polish,12pt,a4paper]{article}
+\documentclass[polish,10pt,a4paper]{article}
 
-\usepackage{polski,amsmath,amsfonts,lipsum,graphicx,float,caption,siunitx,geometry,booktabs,biblatex,pdfpages,array,changepage,ulem,setspace,titlesec,enumitem,adjustbox}
-\usepackage[table]{xcolor}
-\usepackage{amssymb}
+
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage[polish]{babel}
-\selectlanguage{polish}
+\usepackage{lmodern}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{physics}
+\usepackage{siunitx}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage[table]{xcolor}
+\usepackage{adjustbox}
+\usepackage{geometry}
+\usepackage{setspace}
+\usepackage{changepage}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\usepackage{ulem}
+\usepackage{pdfpages}
+\usepackage{hyperref}
 
+
+\selectlanguage{polish}
+\geometry{margin=2.5cm}
+\onehalfspacing
 \usepackage{caption}
 \captionsetup{font=footnotesize}
 
@@ -15,17 +36,26 @@
 
 \begin{titlepage}
     \centering
-    \includegraphics[width=0.44\textwidth]{logo_pg.png} \\[1.5cm]
-    {\LARGE \bfseries Optyka soczewek \\[0.5cm]} 
-    {\large Grupa projektowa: 1B \\[1cm]} 
-    {\large Wykonawcy: \\[0.3cm]}
-    \textit{Jakub Stosik} s204300 \\ 
-    \textit{Karol Pluto Prądzynski} s203561 \\[1.5cm]
-    {\large Wersja dokumentu: \textit{1.3} \\[0.2cm]}
-    \vspace{0.4cm}
-    {\large\textit{ 15 XII 2025 r.} }
-    
-    \vfill
+    \includegraphics[width=0.34\textwidth]{logo_pg.png} \\[0.5cm]
+	{\Large Politechnika Gdańska}\\[0.5cm]
+{\large Wydział Fizyki Technicznej i Matematyki Stosowanej}\\[2cm]
+
+{\huge \textbf{Optyka soczewek}}\\[0.11cm]
+{\large \textit{Wstęp do modelowania zjawisk fizycznych}}\\[1.88cm]
+
+{\large Grupa projektowa: 1B}\\
+{\large \textbf{Dokumentacja projektu}}\\
+{\large \textit{Wersja 1.4}}\\[3cm]
+
+\begin{flushright}
+Autorzy: Jakub Stosik, Karol Pluto Prądzynski\\
+Nr albumu: s204300, s203561\\
+Prowadzący: dr inż. Ewa Erdmann
+\end{flushright}
+
+\vfill
+Gdańsk, 2026
+
 \end{titlepage}
 
 \section{Wstęp}
@@ -35,7 +65,7 @@ Optyka jest działem fizyki zajmującą się światłem - jego prawami, rozchodz
     Celem projektu jest zaprojektowanie modelu fizycznego promienia świetlnego przechodzącego przez soczewkę o zadanych parametrach.
     
 \section{Opis modelowanego zjawiska}
-    Soczewki mogą wytwarzać obraz źródła światła zmieniając kierunek promieni świetlnych wychodzących z jego powierzchni. Obraz powstaje gdy po zmianie kierunku przecinają się promienie (tworząc obraz rzeczywisty), lub ich przedłużenia (tworząc obraz pozorny).
+    Soczewki mogą wytwarzać obraz źródła światła zmieniając kierunek promieni świetlnych wychodzących z jego powierzchni. Obraz powstaje gdy po zmianie kierunku przecinają się promienie (tworząc obraz rzeczywisty), lub ich przedłużenia (tworząc obraz pozorny). \cite{halliday2014}
 
 %    W matematycznym opisie będziemy używali następujących wielkości:
    % \begin{itemize}
@@ -241,21 +271,21 @@ Funkcje liczące nam promień zwracają nowy punkt przecięcia oraz nowy kierune
 Podsumowując: tak możemy wymodelować \textit{ray tracing} dla soczewek \textbf{grubych}.
 
 \section{Opis wykorzystywanych narzędzi}
-    \begin{itemize}
+    \begin{enumerate}
         \item Wersja Pythona: 3.14,
         \item Wykorzystywane biblioteki: numpy, sympy, matplotlib, scipy,
         \item IDE: Visual Studio Code
-    \end{itemize}
+    \end{enumerate}
     
 \section{Ogólny opis i możliwe alternatywy}
-Przed wyświetleniem wizualizacji użytkownik będzie miał możliwość wyboru jednej z czterech typów soczewek za pomocą przycisków. Soczewki dwuwypukłe, soczewki dwuwklęsłe, soczewki płasko-wypukłe oraz płasko-wklęsłe. Wtedy też program pozwoli użytkownikowi na dobranie parametru promienia świetlnego - punkt jego 'startu' oraz promienie krzywizn/krzywizny za pomocą suwaku. Następnie dla wybranej soczewki program pokaże przebieg promienia światła od początku do załamania promienia z powierzchnią soczewki, przez przebieg promienia przez soczewkę, do ponownego załamania promienia na granicy soczewka-powietrze oraz dalej w nowym oknie.
+Podczas wyświetlenia wizualizacji użytkownik będzie miał możliwość wyboru jednej z czterech typów soczewek za pomocą przycisków oraz dla użytkownika dostępny jest także slider ustalający punkty startowy $(z_0)$ promienia. Zamodelowane soczewki to:  soczewki dwuwypukłe, soczewki dwuwklęsłe, soczewki płasko-wypukłe oraz płasko-wklęsłe. Następnie dla wybranej soczewki program pokaże przebieg promienia światła od początku do załamania promienia z powierzchnią soczewki, przez przebieg promienia przez soczewkę, do ponownego załamania promienia na granicy soczewka-powietrze oraz dalej.
 
-Użytkownik powinien mieć możliwość wprowadzenia danych bezpośrednio w interfejsie za pomocą suwaków oraz wcześniej wspomnianych przycisków.
+Użytkownik powinien mieć możliwość wyboru soczewki oraz punktu startowego promienia bezpośrednio w interfejsie za pomocą suwaka oraz wcześniej wspomnianych przycisków.
 
-Jak ma wyglądać interfejs? Na początku wybranie soczewki i jej materiału, zadanie promienia krzywizny/krzywizn. Kolejne okno: wykres soczewki wraz z przebiegiem promienia w \textit{matplotlib}
+Jak ma wyglądać interfejs? Po lewej stronie ekranu pole z przyciskami wyboru soczewki, w centralnej części model soczewki na wykresie, wyrysowany za pomocą \textit{matplotlib}, a poniżej wykresu - suwak pozwalający ustalić punkty startowy promienia.
 
 
-Alternatywą jest przygotowanie soczewek o odgórnie zadanych parametrach, przez którą załamywać się będzie promień. Inną alternatywą jest uruchomienie interfejsu w pojedynczym oknie, pozwolenie użytkownikowi na dobranie typów i materiałów soczewek w czasie rzeczywistym, a więc dodatnie funkcji aktualizującej obliczenia w czasie rzeczywistym. Jeszcze inną alternatywą jest dodatkowo dodanie soczewek grubych.
+Alternatywą jest pozwolenie użytkownikowi na dobranie typów i materiałów soczewek w czasie rzeczywistym, a więc dodatnie funkcji aktualizującej obliczenia w czasie rzeczywistym. Jeszcze inną alternatywą jest dodatkowo dodanie soczewek grubych.
     
 \section{Specyficzne wymagania}
     \subsection{Wymagania funkcjonalne}
@@ -295,10 +325,6 @@ Alternatywą jest przygotowanie soczewek o odgórnie zadanych parametrach, przez
 \end{table}
 
 
-\begin{thebibliography}{9}
-\bibitem{bobrowski2016}\textit{Fizyka. Krótki kurs}, Czesław Bobrowski, Wydawnictwo Naukowe PWN 2016.
-\bibitem{halliday2014} \textit{Podstawy fizyki cz. 4}, D. Halliday, R. Resnick, J. Walker, Wydawnictwo Naukowe PWN 2014.
-\end{thebibliography}
 \newpage
 
 \begin{footnotesize}
@@ -316,7 +342,29 @@ Alternatywą jest przygotowanie soczewek o odgórnie zadanych parametrach, przez
 \item Dodanie opisu przebiegu promienia świetlnego
 \item Usunięcie zbędnego opisu matematycznego tworzenia obrazu przez daną soczewkę, ponieważ nie to jest modelowane
 \end{enumerate}
+\subsection*{Wersja 1.4}
+\begin{enumerate}
+\item Ostatnie poprawki dokumentacji
+\item Graficzna zmiana dokumentu, marginesy, strona tytułowa, bibliografia zgodna z normą PN-ISO 690:2012.
+\end{enumerate}
 \end{footnotesize}
+
+
+\newpage
+\begin{thebibliography}{9}
+
+\bibitem{bobrowski2016}
+BOBROWSKI, Czesław.
+\textit{Fizyka. Krótki kurs}.
+Warszawa: Wydawnictwo Naukowe PWN, 2016.
+
+\bibitem{halliday2014}
+HALLIDAY, David; RESNICK, Robert; WALKER, Jearl.
+\textit{Podstawy fizyki. Część 4}.
+Warszawa: Wydawnictwo Naukowe PWN, 2014.
+
+\end{thebibliography}
+
 \end{document}
 
 
